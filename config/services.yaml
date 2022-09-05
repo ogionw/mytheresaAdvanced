@@ -7,6 +7,18 @@ parameters:
 
 services:
     # default configuration for services in *this* file
+    _instanceof:
+        App\Application\Cqrs\CommandHandler:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+        App\Application\Cqrs\QueryHandler:
+            tags:
+                - { name: messenger.message_handler, bus: query.bus }
+        App\Application\Cqrs\EventHandler:
+            tags:
+                - { name: messenger.message_handler, bus: event.bus }
+        App\Presentation\Response\EndpointResponses\Common\ResponseStrategy:
+            tags: [ 'app.response' ]
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
@@ -17,8 +29,12 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            - '../src/Infrastructure/Entity/'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Presentation\Response\HttpResponseGeneratorFactory:
+        # inject all services tagged with app.handler as first argument
+        arguments:
+            - !tagged_iterator app.response
