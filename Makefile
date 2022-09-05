@@ -12,7 +12,7 @@ SYMFONY       = $(DOCKER_PHP) $(EXEC_PHP) bin/console
 PHPUNIT       = $(DOCKER_PHP) $(EXEC_PHP) vendor/bin/phpunit
 
 ## —— Docker 🐳 ————————————————————————————————————————————————————————————————
-up: ## Start the docker hub (PHP,Postgres)
+install: ## Start the docker hub (PHP,Postgres)
 	$(DOCKER_COMP) up --detach
 	$(DOCKER_COMP) run $(COMPOSER) docker-php-ext-install bcmath
 	$(DOCKER_COMP) run --rm $(COMPOSER) install -n
